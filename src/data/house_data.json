@@ -1,0 +1,256 @@
+{
+    "project": "Casinha 150",
+    "dimensions": {
+        "width": 150,
+        "depth": 150,
+        "wallHeight": 150,
+        "wallThickness": 9,
+        "moduleWidth": 50
+    },
+    "phases": [
+        {
+            "id": "PHASE_WALLS",
+            "name": "1. Paredes",
+            "packages": [
+                {
+                    "id": "P01_FUNDO",
+                    "name": "Parede Fundo",
+                    "description": "Começa no ponto zero e define o fundo.",
+                    "position": {
+                        "x": 0,
+                        "y": 0,
+                        "z": 0
+                    },
+                    "rotation": {
+                        "x": 0,
+                        "y": 0,
+                        "z": 0
+                    },
+                    "pieces": [
+                        {
+                            "id": "w1_p1",
+                            "type": "panel_solid",
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        {
+                            "id": "w1_p2",
+                            "type": "panel_solid",
+                            "x": 50,
+                            "y": 0,
+                            "z": 0
+                        },
+                        {
+                            "id": "w1_p3",
+                            "type": "panel_solid",
+                            "x": 100,
+                            "y": 0,
+                            "z": 0
+                        }
+                    ]
+                },
+                {
+                    "id": "P02_DIREITA",
+                    "name": "Parede Direita (Janela)",
+                    "description": "Conecta no final da parede de fundo e gira 90 graus.",
+                    "position": {
+                        "x": 150,
+                        "y": 0,
+                        "z": 0
+                    },
+                    "rotation": {
+                        "x": 0,
+                        "y": -1.570796,
+                        "z": 0
+                    },
+                    "pieces": [
+                        {
+                            "id": "w2_p1",
+                            "type": "panel_solid",
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        {
+                            "id": "w2_p2",
+                            "type": "panel_window",
+                            "x": 50,
+                            "y": 0,
+                            "z": 0
+                        },
+                        {
+                            "id": "w2_p3",
+                            "type": "panel_solid",
+                            "x": 100,
+                            "y": 0,
+                            "z": 0
+                        }
+                    ]
+                },
+                {
+                    "id": "P03_FRENTE",
+                    "name": "Parede Frente (Porta)",
+                    "description": "Conecta no final da parede direita e gira para fechar a frente.",
+                    "position": {
+                        "x": 150,
+                        "y": 0,
+                        "z": 150
+                    },
+                    "rotation": {
+                        "x": 0,
+                        "y": -3.141592,
+                        "z": 0
+                    },
+                    "pieces": [
+                        {
+                            "id": "w3_p1",
+                            "type": "panel_solid",
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        {
+                            "id": "w3_p2",
+                            "type": "panel_door",
+                            "x": 50,
+                            "y": 0,
+                            "z": 0
+                        },
+                        {
+                            "id": "w3_p3",
+                            "type": "panel_solid",
+                            "x": 100,
+                            "y": 0,
+                            "z": 0
+                        }
+                    ]
+                },
+                {
+                    "id": "P04_ESQUERDA",
+                    "name": "Parede Esquerda",
+                    "description": "Conecta na frente e volta para o fundo.",
+                    "position": {
+                        "x": 0,
+                        "y": 0,
+                        "z": 150
+                    },
+                    "rotation": {
+                        "x": 0,
+                        "y": -4.712388,
+                        "z": 0
+                    },
+                    "pieces": [
+                        {
+                            "id": "w4_p1",
+                            "type": "panel_solid",
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        {
+                            "id": "w4_p2",
+                            "type": "panel_solid",
+                            "x": 50,
+                            "y": 0,
+                            "z": 0
+                        },
+                        {
+                            "id": "w4_p3",
+                            "type": "panel_solid",
+                            "x": 100,
+                            "y": 0,
+                            "z": 0
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "PHASE_ROOF",
+            "name": "2. Telhado",
+            "packages": [
+                {
+                    "id": "P05_OITOES",
+                    "name": "Oitões (Triângulos)",
+                    "description": "Monte os oitões sobre as paredes de frente e fundo.",
+                    "position": {
+                        "x": 0,
+                        "y": 0,
+                        "z": 0
+                    },
+                    "rotation": {
+                        "x": 0,
+                        "y": 0,
+                        "z": 0
+                    },
+                    "pieces": [
+                        {
+                            "id": "g1_l",
+                            "type": "gable_half_left",
+                            "x": 0,
+                            "y": 150,
+                            "z": 0,
+                            "rotY": 0
+                        },
+                        {
+                            "id": "g1_r",
+                            "type": "gable_half_right",
+                            "x": 75,
+                            "y": 150,
+                            "z": 0,
+                            "rotY": 0
+                        },
+                        {
+                            "id": "g2_l",
+                            "type": "gable_half_left",
+                            "x": 150,
+                            "y": 150,
+                            "z": 150,
+                            "rotY": 3.141592
+                        },
+                        {
+                            "id": "g2_r",
+                            "type": "gable_half_right",
+                            "x": 75,
+                            "y": 150,
+                            "z": 150,
+                            "rotY": 3.141592
+                        }
+                    ]
+                },
+                {
+                    "id": "P06_COBERTURA",
+                    "name": "Cobertura",
+                    "description": "Instale as telhas sobre os oitões.",
+                    "position": {
+                        "x": 0,
+                        "y": 0,
+                        "z": 0
+                    },
+                    "rotation": {
+                        "x": 0,
+                        "y": 0,
+                        "z": 0
+                    },
+                    "pieces": [
+                        {
+                            "id": "roof_left",
+                            "type": "roof_panel_left",
+                            "x": 0,
+                            "y": 150,
+                            "z": 0
+                        },
+                        {
+                            "id": "roof_right",
+                            "type": "roof_panel_right",
+                            "x": 75,
+                            "y": 150,
+                            "z": 0
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
