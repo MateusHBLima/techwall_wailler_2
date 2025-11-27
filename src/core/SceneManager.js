@@ -82,13 +82,31 @@ export class SceneManager {
     this.renderer.setSize(width, height);
   }
 
-  focusOnPosition(x, y, z) {
-    // Smoothly move camera to focus on specific position
-    const targetPos = { x: x + 50, y: y + 100, z: z + 100 };
-    const targetLook = { x, y, z };
+  setCardinalView(viewName) {
+    const center = { x: 75, y: 75, z: 75 };
+    let pos = { x: 100, y: 150, z: 200 }; // Default
 
-    // Simple animation (could be improved with libraries like TWEEN.js)
-    const duration = 1000; // 1 second
+    // Fixed Isometric Views (approx 45 degrees down)
+    switch (viewName) {
+      case 'FRONT':
+        pos = { x: 75, y: 250, z: 350 };
+        break;
+      case 'BACK':
+        pos = { x: 75, y: 250, z: -200 };
+        break;
+      case 'LEFT':
+        pos = { x: -200, y: 250, z: 75 };
+        break;
+      case 'RIGHT':
+        pos = { x: 350, y: 250, z: 75 };
+        break;
+    }
+
+    this.animateCamera(pos, center);
+  }
+
+  animateCamera(targetPos, targetLook) {
+    const duration = 1000;
     const startTime = Date.now();
     const startPos = this.camera.position.clone();
     const startTarget = this.controls.target.clone();
@@ -112,6 +130,12 @@ export class SceneManager {
     };
 
     animate();
+  }
+
+  focusOnPosition(x, y, z) {
+    // Deprecated in favor of setCardinalView, but kept for compatibility
+    // Redirects to a default view if called
+    this.setCardinalView('FRONT');
   }
 
   resetCamera() {

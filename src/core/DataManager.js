@@ -1,3 +1,5 @@
+import houseData from '../data/house_data.json';
+
 export class DataManager {
     constructor() {
         this.data = null;
@@ -5,8 +7,8 @@ export class DataManager {
 
     async loadData() {
         try {
-            const response = await fetch('/src/data/house_data.json');
-            this.data = await response.json();
+            // Imported directly to ensure bundling
+            this.data = houseData;
             return this.data;
         } catch (error) {
             console.error('Error loading house data:', error);
