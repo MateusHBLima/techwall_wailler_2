@@ -18,7 +18,7 @@ export class UIManager {
         panel.className = 'panel overview-panel';
 
         const title = document.createElement('h1');
-        title.textContent = 'Casinha 150 WMS';
+        title.textContent = 'Casa Protótipo';
         panel.appendChild(title);
 
         const inventoryList = document.createElement('ul');

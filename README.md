@@ -1,6 +1,6 @@
-# Casinha 150 WMS
+# Casa Protótipo
 
-Manual de montagem interativo 3D para a Casinha 150 da Tech Wall.
+Manual de montagem interativo 3D para a Casa Protótipo da Tech Wall.
 
 ## 🚀 Deploy no Vercel
 
