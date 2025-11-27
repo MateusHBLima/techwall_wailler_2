@@ -70,14 +70,19 @@ export class UIManager {
             });
         });
 
-        this.currentStepIndex = 0;
-        this.currentPieceIndex = -1;
-
-        // Focus camera on first package
-        const firstPkg = this.assemblySteps[0];
-        if (firstPkg && firstPkg.position) {
-            this.sceneManager.focusOnPosition(firstPkg.position.x, firstPkg.position.y, firstPkg.position.z);
+        // Check for saved progress to resume
+        const savedPos = this.state.getAssemblyPosition();
+        if (savedPos.stepIndex > 0 || savedPos.pieceIndex > -1) {
+            console.log('Resuming assembly from:', savedPos);
+            this.currentStepIndex = savedPos.stepIndex;
+            this.currentPieceIndex = savedPos.pieceIndex;
+        } else {
+            this.currentStepIndex = 0;
+            this.currentPieceIndex = -1;
         }
+
+        // Initial View (Back for P01)
+        this.sceneManager.setCardinalView('BACK');
 
         // Lock camera (no rotation) during assembly
         this.sceneManager.setFixedCamera(true);
@@ -89,10 +94,36 @@ export class UIManager {
         const currentPkg = this.assemblySteps[this.currentStepIndex];
         this.house.updateAssemblyState(currentPkg.id, this.currentPieceIndex, this.assemblySteps);
 
-        // Focus camera on current package when starting a new package
-        if (this.currentPieceIndex === -1 && currentPkg.position) {
-            this.sceneManager.focusOnPosition(currentPkg.position.x, currentPkg.position.y, currentPkg.position.z);
+        // Determine Cardinal View
+        let viewName = 'FRONT'; // Default
+
+        if (currentPkg.id === 'P01_FUNDO') viewName = 'BACK';
+        else if (currentPkg.id === 'P02_DIREITA') viewName = 'RIGHT';
+        else if (currentPkg.id === 'P03_FRENTE') viewName = 'FRONT';
+        else if (currentPkg.id === 'P04_ESQUERDA') viewName = 'LEFT';
+        else if (currentPkg.id === 'P05_OITOES') {
+            // Check piece Z position to decide Front vs Back
+            if (this.currentPieceIndex > -1) {
+                const piece = currentPkg.pieces[this.currentPieceIndex];
+                if (piece.z < 75) viewName = 'BACK';
+                else viewName = 'FRONT';
+            } else {
+                // Default start of package
+                viewName = 'BACK';
+            }
         }
+        else if (currentPkg.id === 'P06_COBERTURA') {
+            // Check piece type for Left vs Right
+            if (this.currentPieceIndex > -1) {
+                const piece = currentPkg.pieces[this.currentPieceIndex];
+                if (piece.type.includes('left')) viewName = 'LEFT';
+                else viewName = 'RIGHT';
+            } else {
+                viewName = 'LEFT';
+            }
+        }
+
+        this.sceneManager.setCardinalView(viewName);
 
         this.renderAssemblyUI();
     }
@@ -117,9 +148,20 @@ export class UIManager {
         const localCounts = {};
         currentPkg.pieces.forEach(p => localCounts[p.type] = (localCounts[p.type] || 0) + 1);
 
+        // Calculate installed pieces for this specific step
+        const installedInStep = {};
+        // Check pieces up to currentPieceIndex
+        for (let i = 0; i <= this.currentPieceIndex; i++) {
+            const p = currentPkg.pieces[i];
+            if (p) {
+                installedInStep[p.type] = (installedInStep[p.type] || 0) + 1;
+            }
+        }
+
         for (const [type, count] of Object.entries(localCounts)) {
             const item = document.createElement('li');
-            item.textContent = `${this.formatType(type)}: ${count}`;
+            const installed = installedInStep[type] || 0;
+            item.textContent = `${this.formatType(type)}: ${installed}/${count}`;
             inventoryList.appendChild(item);
         }
         panel.appendChild(inventoryList);
