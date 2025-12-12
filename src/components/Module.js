@@ -7,6 +7,13 @@ export class Module {
         this.height = height;
         this.thickness = thickness;
         this.mesh = new THREE.Group();
+        this.mesh.userData = {
+            selectable: true,
+            isInteractableRoot: true,
+            type: this.type,
+            width: this.width,
+            height: this.height
+        };
 
         this.materials = {
             normal: new THREE.MeshStandardMaterial({ color: 0xffffff, side: THREE.DoubleSide }),

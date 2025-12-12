@@ -5,6 +5,12 @@ export class Wall {
     constructor(packageData) {
         this.data = packageData;
         this.mesh = new THREE.Group();
+        this.mesh.userData = {
+            selectable: true,
+            isInteractableRoot: true,
+            id: this.data.id,
+            type: 'wall'
+        };
         this.modules = [];
 
         this.build();

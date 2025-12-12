@@ -1,0 +1,1334 @@
+{
+  "reportTitle": "Relatório de Peças Extraídas",
+  "generatedAt": "2025-12-11T19:47:04.912Z",
+  "summary": {
+    "totalFiles": 17,
+    "extractedFiles": 17,
+    "totalTypes": 31,
+    "totalPieces": 292
+  },
+  "byFile": [
+    {
+      "fileName": "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+      "itemCount": 77,
+      "items": [
+        {
+          "type": "200x61",
+          "quantity": 2,
+          "length": 200,
+          "description": ""
+        },
+        {
+          "type": "200x61",
+          "quantity": 2,
+          "length": 200,
+          "description": ""
+        },
+        {
+          "type": "200x61",
+          "quantity": 2,
+          "length": 200,
+          "description": ""
+        },
+        {
+          "type": "200x61",
+          "quantity": 2,
+          "length": 200,
+          "description": ""
+        },
+        {
+          "type": "COB. TRAMA 2",
+          "quantity": 1,
+          "length": 200,
+          "description": ""
+        },
+        {
+          "type": "COB. TRAMA 2",
+          "quantity": 1,
+          "length": 200,
+          "description": ""
+        },
+        {
+          "type": "COB. TRAMA 1",
+          "quantity": 1,
+          "length": 200,
+          "description": ""
+        },
+        {
+          "type": "COB. TRAMA 1",
+          "quantity": 1,
+          "length": 200,
+          "description": ""
+        },
+        {
+          "type": "COB. TRAMA 2",
+          "quantity": 1,
+          "length": 200,
+          "description": ""
+        },
+        {
+          "type": "COB. TRAMA 2",
+          "quantity": 1,
+          "length": 200,
+          "description": ""
+        },
+        {
+          "type": "COB. TRAMA 1",
+          "quantity": 1,
+          "length": 200,
+          "description": ""
+        },
+        {
+          "type": "COB. TRAMA 1",
+          "quantity": 1,
+          "length": 200,
+          "description": ""
+        },
+        {
+          "type": "PEÇA 2280mm",
+          "quantity": 1,
+          "length": 2280,
+          "description": ""
+        },
+        {
+          "type": "PEÇA 9500mm",
+          "quantity": 3,
+          "length": 9500,
+          "description": ""
+        },
+        {
+          "type": "PEÇA 4420mm",
+          "quantity": 2,
+          "length": 4420,
+          "description": ""
+        },
+        {
+          "type": "PEÇA 3320mm",
+          "quantity": 2,
+          "length": 3320,
+          "description": ""
+        },
+        {
+          "type": "TELHA SANDUICHE 5CM",
+          "quantity": 32,
+          "length": 3000,
+          "description": ""
+        },
+        {
+          "type": "57x11",
+          "quantity": 1,
+          "length": 57,
+          "description": ""
+        },
+        {
+          "type": "61x238",
+          "quantity": 1,
+          "length": 61,
+          "description": ""
+        },
+        {
+          "type": "219x18",
+          "quantity": 1,
+          "length": 219,
+          "description": ""
+        },
+        {
+          "type": "280x61",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "154x45",
+          "quantity": 1,
+          "length": 154,
+          "description": ""
+        },
+        {
+          "type": "280x61",
+          "quantity": 3,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "VER CORTE",
+          "quantity": 2,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "CORTE I=15%",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "CORTE I=15%",
+          "quantity": 1,
+          "length": 20,
+          "description": ""
+        },
+        {
+          "type": "TRAMA 1",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "TRAMA 2",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "SUPORTE TELHADO",
+          "quantity": 1,
+          "length": 136,
+          "description": ""
+        },
+        {
+          "type": "61x125",
+          "quantity": 1,
+          "length": 61,
+          "description": ""
+        },
+        {
+          "type": "280x54",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "280x61",
+          "quantity": 3,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "280x61",
+          "quantity": 4,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "VER CORTE",
+          "quantity": 2,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "TRAMA 1",
+          "quantity": 2,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "CORTE I=13%",
+          "quantity": 1,
+          "length": 86,
+          "description": ""
+        },
+        {
+          "type": "CORTE I=13%",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "96x61",
+          "quantity": 1,
+          "length": 96,
+          "description": ""
+        },
+        {
+          "type": "158x61",
+          "quantity": 1,
+          "length": 158,
+          "description": ""
+        },
+        {
+          "type": "280x61",
+          "quantity": 6,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "TRAMA 1",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "TRAMA 2",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "VER CORTE",
+          "quantity": 2,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "VER CORTE",
+          "quantity": 2,
+          "length": 219,
+          "description": ""
+        },
+        {
+          "type": "61x183",
+          "quantity": 1,
+          "length": 61,
+          "description": ""
+        },
+        {
+          "type": "61x115",
+          "quantity": 1,
+          "length": 61,
+          "description": ""
+        },
+        {
+          "type": "280x61",
+          "quantity": 8,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "TRAMA 2",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "VER CORTE",
+          "quantity": 2,
+          "length": 219,
+          "description": ""
+        },
+        {
+          "type": "57x61",
+          "quantity": 1,
+          "length": 57,
+          "description": ""
+        },
+        {
+          "type": "61x183",
+          "quantity": 1,
+          "length": 61,
+          "description": ""
+        },
+        {
+          "type": "280x61",
+          "quantity": 2,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "TRAMA 2",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "100x45",
+          "quantity": 1,
+          "length": 100,
+          "description": ""
+        },
+        {
+          "type": "61x129",
+          "quantity": 1,
+          "length": 61,
+          "description": ""
+        },
+        {
+          "type": "280x61",
+          "quantity": 2,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "VER CORTE",
+          "quantity": 1,
+          "length": 219,
+          "description": ""
+        },
+        {
+          "type": "CORTE I=13%",
+          "quantity": 1,
+          "length": 77,
+          "description": ""
+        },
+        {
+          "type": "61x122",
+          "quantity": 1,
+          "length": 61,
+          "description": ""
+        },
+        {
+          "type": "219x18",
+          "quantity": 2,
+          "length": 219,
+          "description": ""
+        },
+        {
+          "type": "280x61",
+          "quantity": 2,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "CORTE I=13%",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "TRAMA 2",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "TRAMA 1",
+          "quantity": 1,
+          "length": 219,
+          "description": ""
+        },
+        {
+          "type": "280x54",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "280x61",
+          "quantity": 4,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "TRAMA 1",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "TRAMA 1 / VER CORTE",
+          "quantity": 1,
+          "length": 219,
+          "description": ""
+        },
+        {
+          "type": "VER CORTE",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "CORTE I=15%",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "SUPORTE TELHADO",
+          "quantity": 1,
+          "length": 246,
+          "description": ""
+        },
+        {
+          "type": "CORTE I=15%",
+          "quantity": 1,
+          "length": 30.5,
+          "description": ""
+        },
+        {
+          "type": "TRAMA 2",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "61x122",
+          "quantity": 1,
+          "length": 61,
+          "description": ""
+        },
+        {
+          "type": "280x31",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "280x61",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "219x18",
+          "quantity": 2,
+          "length": 219,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "fileName": "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Planta de piso - PAV- COB-Model.pdf",
+      "itemCount": 5,
+      "items": [
+        {
+          "type": "PEÇA 2280mm",
+          "quantity": 1,
+          "length": 2280,
+          "description": ""
+        },
+        {
+          "type": "PEÇA 9500mm",
+          "quantity": 3,
+          "length": 9500,
+          "description": ""
+        },
+        {
+          "type": "PEÇA 4420mm",
+          "quantity": 2,
+          "length": 4420,
+          "description": ""
+        },
+        {
+          "type": "PEÇA 3320mm",
+          "quantity": 2,
+          "length": 3320,
+          "description": ""
+        },
+        {
+          "type": "TELHA SANDUICHE 5CM",
+          "quantity": 32,
+          "length": 3000,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "fileName": "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Planta de piso - PAV- COB- TELHADO-Model.pdf",
+      "itemCount": 0,
+      "items": []
+    },
+    {
+      "fileName": "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 9-Model.pdf",
+      "itemCount": 5,
+      "items": [
+        {
+          "type": "154x45",
+          "quantity": 1,
+          "length": 154,
+          "description": ""
+        },
+        {
+          "type": "280x61",
+          "quantity": 3,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "TRAMA 1",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "TRAMA 2",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "SUPORTE TELHADO",
+          "quantity": 1,
+          "length": 136,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "fileName": "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 8-Model.pdf",
+      "itemCount": 4,
+      "items": [
+        {
+          "type": "61x122",
+          "quantity": 1,
+          "length": 61,
+          "description": ""
+        },
+        {
+          "type": "280x31",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "280x61",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "219x18",
+          "quantity": 2,
+          "length": 219,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "fileName": "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 7-Model.pdf",
+      "itemCount": 7,
+      "items": [
+        {
+          "type": "96x61",
+          "quantity": 1,
+          "length": 96,
+          "description": ""
+        },
+        {
+          "type": "158x61",
+          "quantity": 1,
+          "length": 158,
+          "description": ""
+        },
+        {
+          "type": "280x61",
+          "quantity": 6,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "TRAMA 1",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "TRAMA 2",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "VER CORTE",
+          "quantity": 2,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "VER CORTE",
+          "quantity": 2,
+          "length": 219,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "fileName": "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 6-Model.pdf",
+      "itemCount": 8,
+      "items": [
+        {
+          "type": "57x61",
+          "quantity": 1,
+          "length": 57,
+          "description": ""
+        },
+        {
+          "type": "61x183",
+          "quantity": 1,
+          "length": 61,
+          "description": ""
+        },
+        {
+          "type": "280x61",
+          "quantity": 2,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "TRAMA 2",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "VER CORTE",
+          "quantity": 1,
+          "length": 219,
+          "description": ""
+        },
+        {
+          "type": "CORTE I=13%",
+          "quantity": 1,
+          "length": 77,
+          "description": ""
+        },
+        {
+          "type": "CORTE I=13%",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "TRAMA 1 / VER CORTE",
+          "quantity": 1,
+          "length": 219,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "fileName": "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 5-Model.pdf",
+      "itemCount": 7,
+      "items": [
+        {
+          "type": "57x11",
+          "quantity": 1,
+          "length": 57,
+          "description": ""
+        },
+        {
+          "type": "61x238",
+          "quantity": 1,
+          "length": 61,
+          "description": ""
+        },
+        {
+          "type": "219x18",
+          "quantity": 1,
+          "length": 219,
+          "description": ""
+        },
+        {
+          "type": "280x61",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "VER CORTE",
+          "quantity": 2,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "CORTE I=15%",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "CORTE I=15%",
+          "quantity": 1,
+          "length": 20,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "fileName": "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 3-Model.pdf",
+      "itemCount": 4,
+      "items": [
+        {
+          "type": "61x125",
+          "quantity": 1,
+          "length": 61,
+          "description": ""
+        },
+        {
+          "type": "280x54",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "280x61",
+          "quantity": 3,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "VER CORTE",
+          "quantity": 2,
+          "length": 280,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "fileName": "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 2-Model.pdf",
+      "itemCount": 6,
+      "items": [
+        {
+          "type": "61x122",
+          "quantity": 1,
+          "length": 61,
+          "description": ""
+        },
+        {
+          "type": "219x18",
+          "quantity": 2,
+          "length": 219,
+          "description": ""
+        },
+        {
+          "type": "280x61",
+          "quantity": 2,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "TRAMA 1",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "CORTE I=15%",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "CORTE I=15%",
+          "quantity": 1,
+          "length": 30.5,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "fileName": "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 11-Model.pdf",
+      "itemCount": 5,
+      "items": [
+        {
+          "type": "61x183",
+          "quantity": 1,
+          "length": 61,
+          "description": ""
+        },
+        {
+          "type": "61x115",
+          "quantity": 1,
+          "length": 61,
+          "description": ""
+        },
+        {
+          "type": "280x61",
+          "quantity": 8,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "TRAMA 2",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "VER CORTE",
+          "quantity": 2,
+          "length": 219,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "fileName": "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 10-Model.pdf",
+      "itemCount": 7,
+      "items": [
+        {
+          "type": "100x45",
+          "quantity": 1,
+          "length": 100,
+          "description": ""
+        },
+        {
+          "type": "61x129",
+          "quantity": 1,
+          "length": 61,
+          "description": ""
+        },
+        {
+          "type": "280x61",
+          "quantity": 2,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "TRAMA 2",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "TRAMA 1",
+          "quantity": 1,
+          "length": 219,
+          "description": ""
+        },
+        {
+          "type": "VER CORTE",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "SUPORTE TELHADO",
+          "quantity": 1,
+          "length": 246,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "fileName": "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 1-Model.pdf",
+      "itemCount": 4,
+      "items": [
+        {
+          "type": "280x61",
+          "quantity": 4,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "TRAMA 1",
+          "quantity": 2,
+          "length": 280,
+          "description": ""
+        },
+        {
+          "type": "CORTE I=13%",
+          "quantity": 1,
+          "length": 86,
+          "description": ""
+        },
+        {
+          "type": "CORTE I=13%",
+          "quantity": 1,
+          "length": 280,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "fileName": "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - COB- FUNDO-Model.pdf",
+      "itemCount": 3,
+      "items": [
+        {
+          "type": "200x61",
+          "quantity": 2,
+          "length": 200,
+          "description": ""
+        },
+        {
+          "type": "COB. TRAMA 1",
+          "quantity": 1,
+          "length": 200,
+          "description": ""
+        },
+        {
+          "type": "COB. TRAMA 1",
+          "quantity": 1,
+          "length": 200,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "fileName": "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - COB- FRENTE-Model.pdf",
+      "itemCount": 3,
+      "items": [
+        {
+          "type": "200x61",
+          "quantity": 2,
+          "length": 200,
+          "description": ""
+        },
+        {
+          "type": "COB. TRAMA 1",
+          "quantity": 1,
+          "length": 200,
+          "description": ""
+        },
+        {
+          "type": "COB. TRAMA 1",
+          "quantity": 1,
+          "length": 200,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "fileName": "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - COB- ESQ--Model.pdf",
+      "itemCount": 3,
+      "items": [
+        {
+          "type": "200x61",
+          "quantity": 2,
+          "length": 200,
+          "description": ""
+        },
+        {
+          "type": "COB. TRAMA 2",
+          "quantity": 1,
+          "length": 200,
+          "description": ""
+        },
+        {
+          "type": "COB. TRAMA 2",
+          "quantity": 1,
+          "length": 200,
+          "description": ""
+        }
+      ]
+    },
+    {
+      "fileName": "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - COB- DIR--Model.pdf",
+      "itemCount": 3,
+      "items": [
+        {
+          "type": "200x61",
+          "quantity": 2,
+          "length": 200,
+          "description": ""
+        },
+        {
+          "type": "COB. TRAMA 2",
+          "quantity": 1,
+          "length": 200,
+          "description": ""
+        },
+        {
+          "type": "COB. TRAMA 2",
+          "quantity": 1,
+          "length": 200,
+          "description": ""
+        }
+      ]
+    }
+  ],
+  "consolidated": [
+    {
+      "type": "280X61",
+      "count": 68,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 9-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 8-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 7-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 6-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 5-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 3-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 2-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 11-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 10-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 1-Model.pdf"
+      ],
+      "length": 280
+    },
+    {
+      "type": "TELHA SANDUICHE 5CM",
+      "count": 64,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Planta de piso - PAV- COB-Model.pdf"
+      ],
+      "length": 3000
+    },
+    {
+      "type": "VER CORTE",
+      "count": 24,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 7-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 6-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 5-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 3-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 11-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 10-Model.pdf"
+      ],
+      "length": 280
+    },
+    {
+      "type": "200X61",
+      "count": 16,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - COB- FUNDO-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - COB- FRENTE-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - COB- ESQ--Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - COB- DIR--Model.pdf"
+      ],
+      "length": 200
+    },
+    {
+      "type": "TRAMA 1",
+      "count": 12,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 9-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 7-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 2-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 10-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 1-Model.pdf"
+      ],
+      "length": 280
+    },
+    {
+      "type": "TRAMA 2",
+      "count": 11,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 9-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 7-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 6-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 11-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 10-Model.pdf"
+      ],
+      "length": 280
+    },
+    {
+      "type": "219X18",
+      "count": 10,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 8-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 5-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 2-Model.pdf"
+      ],
+      "length": 219
+    },
+    {
+      "type": "COB. TRAMA 2",
+      "count": 8,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - COB- ESQ--Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - COB- DIR--Model.pdf"
+      ],
+      "length": 200
+    },
+    {
+      "type": "COB. TRAMA 1",
+      "count": 8,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - COB- FUNDO-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - COB- FRENTE-Model.pdf"
+      ],
+      "length": 200
+    },
+    {
+      "type": "CORTE I=15%",
+      "count": 8,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 5-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 2-Model.pdf"
+      ],
+      "length": 280
+    },
+    {
+      "type": "CORTE I=13%",
+      "count": 8,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 6-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 1-Model.pdf"
+      ],
+      "length": 86
+    },
+    {
+      "type": "PEÇA 9500MM",
+      "count": 6,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Planta de piso - PAV- COB-Model.pdf"
+      ],
+      "length": 9500
+    },
+    {
+      "type": "PEÇA 4420MM",
+      "count": 4,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Planta de piso - PAV- COB-Model.pdf"
+      ],
+      "length": 4420
+    },
+    {
+      "type": "PEÇA 3320MM",
+      "count": 4,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Planta de piso - PAV- COB-Model.pdf"
+      ],
+      "length": 3320
+    },
+    {
+      "type": "SUPORTE TELHADO",
+      "count": 4,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 9-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 10-Model.pdf"
+      ],
+      "length": 136
+    },
+    {
+      "type": "61X183",
+      "count": 4,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 6-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 11-Model.pdf"
+      ],
+      "length": 61
+    },
+    {
+      "type": "61X122",
+      "count": 4,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 8-Model.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 2-Model.pdf"
+      ],
+      "length": 61
+    },
+    {
+      "type": "280X54",
+      "count": 3,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 3-Model.pdf"
+      ],
+      "length": 280
+    },
+    {
+      "type": "PEÇA 2280MM",
+      "count": 2,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Planta de piso - PAV- COB-Model.pdf"
+      ],
+      "length": 2280
+    },
+    {
+      "type": "57X11",
+      "count": 2,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 5-Model.pdf"
+      ],
+      "length": 57
+    },
+    {
+      "type": "61X238",
+      "count": 2,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 5-Model.pdf"
+      ],
+      "length": 61
+    },
+    {
+      "type": "154X45",
+      "count": 2,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 9-Model.pdf"
+      ],
+      "length": 154
+    },
+    {
+      "type": "61X125",
+      "count": 2,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 3-Model.pdf"
+      ],
+      "length": 61
+    },
+    {
+      "type": "96X61",
+      "count": 2,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 7-Model.pdf"
+      ],
+      "length": 96
+    },
+    {
+      "type": "158X61",
+      "count": 2,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 7-Model.pdf"
+      ],
+      "length": 158
+    },
+    {
+      "type": "61X115",
+      "count": 2,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 11-Model.pdf"
+      ],
+      "length": 61
+    },
+    {
+      "type": "57X61",
+      "count": 2,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 6-Model.pdf"
+      ],
+      "length": 57
+    },
+    {
+      "type": "100X45",
+      "count": 2,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 10-Model.pdf"
+      ],
+      "length": 100
+    },
+    {
+      "type": "61X129",
+      "count": 2,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 10-Model.pdf"
+      ],
+      "length": 61
+    },
+    {
+      "type": "TRAMA 1 / VER CORTE",
+      "count": 2,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 6-Model.pdf"
+      ],
+      "length": 219
+    },
+    {
+      "type": "280X31",
+      "count": 2,
+      "sources": [
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Layout1.pdf",
+        "Casa Catarina Telhado Revisão Telhado 08-09-25 - Folha - 04 - Folha Placas-Corte - PAREDE 8-Model.pdf"
+      ],
+      "length": 280
+    }
+  ]
+}

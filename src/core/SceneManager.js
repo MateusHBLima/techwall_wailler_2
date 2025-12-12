@@ -24,7 +24,7 @@ export class SceneManager {
     this.scene.add(gridHelper);
 
     // Axes Helper
-    const axesHelper = new THREE.AxesHelper(50);
+    const axesHelper = new THREE.AxesHelper(100);
     this.scene.add(axesHelper);
 
     console.log('SceneManager initialized. Canvas size:', this.screenDimensions);
@@ -32,9 +32,11 @@ export class SceneManager {
 
   buildCamera() {
     const aspectRatio = this.screenDimensions.width / this.screenDimensions.height;
-    this.camera = new THREE.PerspectiveCamera(60, aspectRatio, 1, 1000);
-    this.camera.position.set(100, 150, 200); // Closer to house
-    this.camera.lookAt(75, 75, 75);
+    // Increased Far Clip to 50000 for Millimeter scale
+    this.camera = new THREE.PerspectiveCamera(60, aspectRatio, 10, 50000);
+    // Position closer to Grid (CM scale)
+    this.camera.position.set(400, 300, 400);
+    this.camera.lookAt(0, 0, 0);
   }
 
   buildRenderer() {
@@ -63,7 +65,7 @@ export class SceneManager {
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.05;
-    this.controls.target.set(75, 75, 75); // Focus on the center of the house
+    this.controls.target.set(0, 0, 0); // Focus on Grid Origin
   }
 
   update() {

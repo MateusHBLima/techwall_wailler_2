@@ -1,9 +1,10 @@
 export class UIManager {
-    constructor(data, house, sceneManager, state) {
+    constructor(data, house, sceneManager, state, interactionManager) {
         this.data = data;
         this.house = house;
         this.sceneManager = sceneManager;
         this.state = state;
+        this.interactionManager = interactionManager;
         this.container = document.createElement('div');
         this.container.id = 'ui-container';
         document.body.appendChild(this.container);
@@ -245,5 +246,131 @@ export class UIManager {
         );
 
         this.renderOverview();
+    }
+
+    // --- Interaction & Properties Panel ---
+
+    onObjectSelected(object) {
+        if (!object) {
+            this.removePropertiesPanel();
+            return;
+        }
+        this.renderPropertiesPanel(object);
+    }
+
+    removePropertiesPanel() {
+        const existing = document.getElementById('properties-panel');
+        if (existing) existing.remove();
+    }
+
+    renderPropertiesPanel(object) {
+        this.removePropertiesPanel();
+
+        const panel = document.createElement('div');
+        panel.id = 'properties-panel';
+        panel.className = 'panel properties-panel';
+        panel.style.position = 'absolute';
+        panel.style.top = '20px';
+        panel.style.left = '20px'; // Stick to Left Panel as requested
+        panel.style.width = '300px';
+        panel.style.zIndex = '1000';
+        panel.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+        panel.style.color = 'white';
+        panel.style.padding = '15px';
+        panel.style.borderRadius = '8px';
+        panel.style.pointerEvents = 'auto';
+
+        const title = document.createElement('h3');
+        title.innerText = `Selected: ${object.userData.type || 'Object'}`;
+        title.style.marginTop = '0';
+        panel.appendChild(title);
+
+        const form = document.createElement('div');
+        form.style.display = 'grid';
+        form.style.gridTemplateColumns = '50px 1fr';
+        form.style.gap = '10px';
+        form.style.alignItems = 'center';
+
+        const createInput = (label, value, onChange) => {
+            const lbl = document.createElement('label');
+            lbl.innerText = label;
+
+            const inp = document.createElement('input');
+            inp.type = 'number';
+            inp.value = value.toFixed(2);
+            inp.step = '1';
+            inp.style.width = '100%';
+            inp.onchange = (e) => onChange(parseFloat(e.target.value));
+            inp.addEventListener('input', (e) => onChange(parseFloat(e.target.value)));
+
+            form.appendChild(lbl);
+            form.appendChild(inp);
+            return inp;
+        };
+
+        const pos = object.position;
+        const rot = object.rotation;
+
+        this.inputs = {};
+
+        this.inputs.x = createInput('X', pos.x, (v) => this.handlePropChange('x', v));
+        this.inputs.y = createInput('Y', pos.y, (v) => this.handlePropChange('y', v));
+        this.inputs.z = createInput('Z', pos.z, (v) => this.handlePropChange('z', v));
+
+        this.inputs.rotY = createInput('Rot Y', THREE.MathUtils.radToDeg(rot.y), (v) => this.handlePropChange('rotY', v));
+
+        panel.appendChild(form);
+
+        // Snapping
+        const snapDiv = document.createElement('div');
+        snapDiv.style.marginTop = '15px';
+        snapDiv.style.borderTop = '1px solid #555';
+        snapDiv.style.paddingTop = '10px';
+
+        const snapLabel = document.createElement('div');
+        snapLabel.innerText = "Snapping";
+        snapLabel.style.marginBottom = '5px';
+        snapDiv.appendChild(snapLabel);
+
+        const snapCheck = document.createElement('input');
+        snapCheck.type = 'checkbox';
+        snapCheck.checked = true;
+        snapCheck.id = 'snap-toggle';
+        snapCheck.onchange = (e) => {
+            if (this.interactionManager) {
+                this.interactionManager.setSnapping(e.target.checked ? 1 : null, e.target.checked ? THREE.MathUtils.degToRad(15) : null);
+            }
+        };
+        const snapText = document.createElement('label');
+        snapText.innerText = " Enabled (1cm / 15°)";
+        snapText.htmlFor = 'snap-toggle';
+
+        snapDiv.appendChild(snapCheck);
+        snapDiv.appendChild(snapText);
+        panel.appendChild(snapDiv);
+
+        this.container.appendChild(panel);
+    }
+
+    updatePropertiesPanel(object) {
+        if (!this.inputs || !object) return;
+
+        if (document.activeElement !== this.inputs.x) this.inputs.x.value = object.position.x.toFixed(2);
+        if (document.activeElement !== this.inputs.y) this.inputs.y.value = object.position.y.toFixed(2);
+        if (document.activeElement !== this.inputs.z) this.inputs.z.value = object.position.z.toFixed(2);
+        if (document.activeElement !== this.inputs.rotY) this.inputs.rotY.value = THREE.MathUtils.radToDeg(object.rotation.y).toFixed(2);
+    }
+
+    handlePropChange(prop, value) {
+        if (!this.interactionManager || !this.interactionManager.selectedObject || isNaN(value)) return;
+
+        const obj = this.interactionManager.selectedObject;
+
+        switch (prop) {
+            case 'x': obj.position.x = value; break;
+            case 'y': obj.position.y = value; break;
+            case 'z': obj.position.z = value; break;
+            case 'rotY': obj.rotation.y = THREE.MathUtils.degToRad(value); break;
+        }
     }
 }
