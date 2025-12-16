@@ -14,10 +14,20 @@ export class ModelBuilderPage {
         this.packageGroups = new Map(); // Stores THREE.Group for each package
         this.suspendInspector = false; // Initialize flag
         this.selectedObjects = []; // Local selection tracking
+
+        // Undo stack for Ctrl+Z
+        this.undoStack = [];
+        this.maxUndoSteps = 20;
+
         this.render();
     }
 
     async render() {
+        // Ensure models are loaded first
+        if (this.modelStore.loadModels) {
+            await this.modelStore.loadModels();
+        }
+
         const modelId = this.params.id;
 
         if (!modelId) {
@@ -71,28 +81,157 @@ export class ModelBuilderPage {
         window.addEventListener('resize', this.resizeHandler);
     }
 
-    renderMenu() {
-        const models = this.modelStore.getModels();
-        this.container.innerHTML = `
-            <div class="page-header">
-                <h2>Model Builder (Templates)</h2>
-                <button id="btn-new-model" class="btn-primary">+ Novo Template</button>
-            </div>
-            <div class="projects-grid">
-                ${models.map(m => `
-                    <div class="project-card">
-                        <h3>${m.name}</h3>
-                        <p>ID: ${m.id}</p>
-                        <div class="actions">
-                            <a href="#model-builder/${m.id}" class="btn-secondary">Editar</a>
+    async renderMenu() {
+        if (this.modelStore.loadModels) await this.modelStore.loadModels(); // Ensure fresh
+
+        const templates = this.modelStore.getTemplates();
+        const projects = this.modelStore.getProjects();
+        const view = this.params.view || 'all'; // 'projects', 'new', 'templates', 'all'
+
+        let contentHtml = '';
+
+        // SECTION: PROJECTS (Meus Projetos)
+        if (view === 'projects' || view === 'all') {
+            contentHtml += `
+                <div style="margin-bottom:40px;">
+                    <h3 style="border-bottom:1px solid #444; padding-bottom:10px; color:#007acc;">Projetos Ativos (Montagem)</h3>
+                    <div class="projects-grid">
+                        ${projects.length === 0 ? '<p style="color:#666;">Nenhum projeto criado ainda.</p>' : ''}
+                        ${projects.map(p => {
+                const progress = p.progress || 0;
+                const progressColor = progress >= 100 ? '#28a745' : progress > 50 ? '#ffc107' : '#007acc';
+                return `
+                            <div class="project-card" style="border-left:4px solid ${progressColor};">
+                                <h3>${p.name}</h3>
+                                <p style="font-family:monospace; font-size:1.2rem; color:#fff; background:#222; padding:5px; text-align:center; border-radius:4px; margin:10px 0;">
+                                    COD: ${p.id}
+                                </p>
+                                
+                                <!-- Progress Bar -->
+                                <div style="margin:15px 0;">
+                                    <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                                        <span style="font-size:0.8rem; color:#888;">Progresso da Montagem</span>
+                                        <span style="font-size:0.9rem; font-weight:bold; color:${progressColor};">${progress}%</span>
+                                    </div>
+                                    <div style="background:#333; border-radius:4px; height:8px; overflow:hidden;">
+                                        <div style="background:${progressColor}; height:100%; width:${progress}%; transition:width 0.3s;"></div>
+                                    </div>
+                                    <div style="font-size:0.7rem; color:#666; margin-top:3px; text-align:right;">
+                                        ${progress >= 100 ? '✓ Concluído' : progress > 0 ? 'Em andamento' : 'Não iniciado'}
+                                    </div>
+                                </div>
+                                
+                                <p style="font-size:0.8rem; color:#aaa;">Modelo Base: ${p.data?.project || 'Custom'}</p>
+                                <div class="actions" style="display:flex; gap:8px; flex-wrap:wrap;">
+                                    <a href="#model-builder/${p.id}" class="btn-secondary" style="flex:1;">Editar / Gerenciar</a>
+                                    <button class="btn-danger" onclick="window.deleteProject('${p.id}')" style="background:#ff4444; border:1px solid #ff6666; color:#fff; padding:8px 12px; border-radius:6px; cursor:pointer; font-size:0.85rem;">🗑️ Excluir</button>
+                                </div>
+                            </div>
+                        `}).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // SECTION: MODEL BUILDER (Templates - Combined with New Project)
+        if (view === 'new' || view === 'templates' || view === 'all') {
+            contentHtml += `
+                <div>
+                    <h3 style="border-bottom:1px solid #444; padding-bottom:10px; color:#ff8800;">
+                        Modelos / Templates
+                        <span style="font-size:0.7rem; color:#888; font-weight:normal; margin-left:10px;">Crie projetos a partir destes modelos</span>
+                    </h3>
+                    <div class="projects-grid">
+                        ${templates.map(m => `
+                            <div class="project-card" style="border-left:4px solid #ff8800;">
+                                <h3>${m.name}</h3>
+                                <p style="font-size:0.75rem; color:#666; margin:5px 0;">ID: ${m.id}</p>
+                                <div class="actions" style="display:flex; flex-direction:column; gap:8px; margin-top:15px;">
+                                    <div style="display:flex; gap:8px;">
+                                        <a href="#model-builder/${m.id}" class="btn-secondary" style="flex:1; text-align:center;">Editar Modelo</a>
+                                        <button class="btn-primary btn-create-proj" data-template-id="${m.id}" style="flex:1;">+ Criar Projeto</button>
+                                    </div>
+                                    <button onclick="window.deleteTemplate('${m.id}')" style="background:#dc3545; border:none; color:white; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem;">🗑️ Excluir Modelo</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                         <div class="project-card" style="border:2px dashed #555; display:flex; align-items:center; justify-content:center; cursor:pointer; min-height:150px;" onclick="window.location.hash='model-builder/new'">
+                            <span style="color:#888; font-size:1.1rem;">+ Novo Template Vazio</span>
                         </div>
                     </div>
-                `).join('')}
+                </div>
+            `;
+        }
+
+        this.container.innerHTML = `
+            <div class="page-header">
+                <h2>Gerenciador de Projetos (Admin)</h2>
+                <div style="display:flex; gap:10px;">
+                     <a href="#assembler" class="btn-secondary">Ir para Área do Montador</a>
+                </div>
+            </div>
+            
+            <div style="padding:30px; overflow-y:auto; height:calc(100% - 80px);">
+                ${contentHtml}
             </div>
         `;
 
-        this.container.querySelector('#btn-new-model').onclick = () => {
-            window.location.hash = 'model-builder/new';
+        // Event Delegation for Create Project
+        this.container.onclick = (e) => {
+            if (e.target.classList.contains('btn-create-proj')) {
+                const templateId = e.target.getAttribute('data-template-id');
+                const name = prompt("Nome do Cliente / Projeto:");
+                if (name) {
+                    try {
+                        const newProj = this.modelStore.createProjectFromTemplate(templateId, name);
+                        alert(`Projeto Criado com Sucesso!\n\nCódigo de Acesso: ${newProj.id}\n\n(Copie este código para o montador)`);
+                        // Force visual update or redirect
+                        window.location.hash = 'dashboard';
+                    } catch (err) {
+                        console.error(err);
+                        alert("Erro ao criar projeto: " + err.message);
+                    }
+                }
+            }
+        };
+
+        // Global function for delete button (inline onclick)
+        window.deleteTemplate = (templateId) => {
+            const template = this.modelStore.getModel(templateId);
+            if (!template) {
+                alert("Modelo não encontrado!");
+                return;
+            }
+
+            if (confirm(`Tem certeza que deseja EXCLUIR o modelo "${template.name}"?\n\nEsta ação não pode ser desfeita.`)) {
+                try {
+                    this.modelStore.deleteModel(templateId);
+                    alert("Modelo excluído com sucesso!");
+                    window.location.reload(); // Reload page to refresh list
+                } catch (err) {
+                    console.error(err);
+                }
+            }
+        };
+
+        // Global function for delete PROJECT button (inline onclick)
+        window.deleteProject = (projectId) => {
+            const project = this.modelStore.getModel(projectId);
+            if (!project) {
+                alert("Projeto não encontrado!");
+                return;
+            }
+
+            if (confirm(`Tem certeza que deseja EXCLUIR o projeto "${project.name}"?\n\nTodo o progresso de montagem será perdido.\nEsta ação não pode ser desfeita.`)) {
+                try {
+                    this.modelStore.deleteModel(projectId);
+                    alert("Projeto excluído com sucesso!");
+                    window.location.reload(); // Reload page to refresh list
+                } catch (err) {
+                    console.error(err);
+                    alert("Erro ao excluir: " + err.message);
+                }
+            }
         };
     }
 
@@ -200,7 +339,11 @@ export class ModelBuilderPage {
 
         bind('tool-back', () => window.location.hash = 'model-builder');
         bind('tool-move', () => this.interactionManager.setMode('translate'));
-        bind('tool-rotate', () => this.interactionManager.setMode('rotate'));
+        // User requested "Rot" button to rotate 90 degrees right immediately
+        bind('tool-rotate', () => {
+            console.log("Quick Rotate 90 Triggered");
+            this.interactionManager.rotateSelectionY(-90);
+        });
         bind('btn-sidebar-add-part', () => this.createPart());
         bind('tool-clone', () => {
             // Check if selection is a package
@@ -233,6 +376,11 @@ export class ModelBuilderPage {
         window.addEventListener('keydown', (e) => {
             if (!this.active) return;
             if (e.key === 'Delete') this.deleteSelection();
+            // Ctrl+Z for undo
+            if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+                e.preventDefault();
+                this.undo();
+            }
         });
     }
 
@@ -307,10 +455,14 @@ export class ModelBuilderPage {
 
         console.log(`smartClone: ${selection ? selection.length : 0} source(s)`);
 
-        if (!selection) {
+        if (!selection || selection.length === 0) {
             console.log("smartClone: No selection found.");
             return [];
         }
+
+        // Save state for undo
+        this.saveUndoState();
+
         // Safety check for .length
         if (!Array.isArray(selection)) {
             console.log("smartClone: Selection is not an array");
@@ -680,7 +832,8 @@ export class ModelBuilderPage {
     }
 
     instantiateLoosePart(data) {
-        const part = new SteelPart(data);
+        const part = new SteelPart(data, { showHelper: false });
+
 
         // Add directly to scene (not to a package group)
         part.mesh.position.set(data.x || 0, data.y || 0, data.z || 0);
@@ -785,7 +938,7 @@ export class ModelBuilderPage {
     }
 
     instantiatePart(data, packageId) {
-        const part = new SteelPart(data);
+        const part = new SteelPart(data, { showHelper: false });
 
         // Get Group
         const group = this.packageGroups.get(packageId);
@@ -837,6 +990,9 @@ export class ModelBuilderPage {
     deleteSelection() {
         const selection = this.interactionManager.selectedObjects;
         if (!selection || selection.length === 0) return;
+
+        // Save state for undo
+        this.saveUndoState();
 
         // Copy array since we'll be modifying during iteration
         const toDelete = [...selection];
@@ -1196,8 +1352,17 @@ export class ModelBuilderPage {
         const profile = ProfileCatalog[data.profileId];
         const isBox = (profile?.type === 'box');
         const isGable = (profile?.type === 'gable');
+        const isTrama = (profile?.type === 'notched_panel');
+        const isPlate = (profile?.type === 'plate');
 
-        console.log(`Inspect: ID=${data.id} Profile=${data.profileId} Type=${profile?.type} IsBox=${isBox} IsGable=${isGable}`);
+        const isOpening = (profile?.type === 'opening');
+
+        console.log(`Inspect: ID=${data.id} Profile=${data.profileId} Type=${profile?.type} isPlate=${isPlate} IsBox=${isBox} IsGable=${isGable} IsTrama=${isTrama} IsOpening=${isOpening}`);
+
+        // Highlight overlapping parts in red if this is a window/door
+        if (isOpening) {
+            this.highlightOverlappingParts(part);
+        }
 
         pan.innerHTML = `
             <div class="inspector-row"><label>ID</label><input type="text" id="inp-id" value="${data.id}"></div>
@@ -1207,19 +1372,51 @@ export class ModelBuilderPage {
             
             <div class="inspector-row"><label>${isBox || isGable ? 'Altura (cm)' : 'Comp. (cm)'}</label><input type="number" id="inp-len" value="${(data.length).toFixed(1)}"></div>
             
-            ${isBox || isGable ? `
-            <div class="inspector-row"><label>Largura (cm)</label><input type="number" id="inp-wid" value="${(data.width !== undefined ? data.width : 100).toFixed(1)}"></div>
-            <div class="inspector-row"><label>Espessura</label><input type="number" id="inp-thk" value="${(data.thickness !== undefined ? data.thickness : 10).toFixed(1)}"></div>
+            ${isBox || isGable || isTrama ? `
+            <div class="inspector-row"><label>Largura (cm)</label><input type="number" id="inp-wid" value="${(data.width !== undefined ? data.width : (isTrama ? 61 : 100)).toFixed(1)}"></div>
+            <div class="inspector-row"><label>Espessura</label><input type="number" id="inp-thk" value="${(data.thickness !== undefined ? data.thickness : (isTrama ? 9 : 10)).toFixed(1)}"></div>
+            ` : ''}
+
+            ${isPlate ? `
+            <div class="inspector-row"><label>Largura (cm)</label><input type="number" id="inp-wid" value="${(data.width !== undefined ? data.width : (profile.width ? profile.width * 0.1 : 100)).toFixed(1)}"></div>
+            <div class="inspector-row"><label>Alt. Onda</label><input type="number" id="inp-hei" value="${(data.height !== undefined ? data.height : (profile.flange ? profile.flange * 0.1 : 4)).toFixed(1)}"></div>
+            ` : ''}
+            
+            ${isBox ? `
+            <div style="margin-top:10px; border-top:1px solid #666; padding-top:8px;">
+                <label style="color:#ff9944; font-weight:bold;">✂️ Definir Corte (Abertura)</label>
+                <div class="inspector-row"><label>Início Horiz. (cm)</label><input type="number" id="cut-start-y" value="${data.cutStartY !== undefined ? data.cutStartY : 20}" min="0"></div>
+                <div class="inspector-row"><label>Fim Horiz. (cm)</label><input type="number" id="cut-end-y" value="${data.cutEndY !== undefined ? data.cutEndY : 80}" min="0"></div>
+                <div class="inspector-row"><label>Início Vert. (cm)</label><input type="number" id="cut-start-z" value="${data.cutStartZ !== undefined ? data.cutStartZ : 50}" min="0"></div>
+                <div class="inspector-row"><label>Fim Vert. (cm)</label><input type="number" id="cut-end-z" value="${data.cutEndZ !== undefined ? data.cutEndZ : 200}" min="0"></div>
+                <button id="btn-preview-cut" class="tool-btn" style="width:100%; margin-top:8px; border:2px solid #ffaa00; color:#ffaa00; background:#332200;">
+                    👁️ Pré-visualizar Corte
+                </button>
+                <button id="btn-confirm-cut" class="tool-btn" style="width:100%; margin-top:6px; border:2px solid #44ff44; color:#44ff44; background:#113311; display:none;">
+                    ✅ Confirmar Corte
+                </button>
+                <button id="btn-cancel-cut" class="tool-btn" style="width:100%; margin-top:4px; border:1px solid #888; color:#888; display:none;">
+                    ❌ Cancelar Preview
+                </button>
+            </div>
+            ` : ''}
+
+            ${profile?.type === 'opening' ? `
+            <div class="inspector-row"><label>Largura (cm)</label><input type="number" id="inp-wid" value="${(data.width !== undefined ? data.width : (profile.width ? profile.width / 10 : 80)).toFixed(1)}"></div>
+            <div class="inspector-row"><label>Altura (cm)</label><input type="number" id="inp-hei" value="${(data.height !== undefined ? data.height : (profile.height ? profile.height / 10 : 210)).toFixed(1)}"></div>
+            <div style="margin-top:10px; margin-bottom:10px;">
+                <button id="btn-cut-walls" class="tool-btn" style="width:100%; border:1px solid #ff4444; color:#ff4444;">✂️ Cortar Sobreposições</button>
+            </div>
             ` : ''}
             
             ${isGable ? `
             <div class="inspector-row"><label>Inclinação (%)</label><input type="number" id="inp-slope" value="${data.slope !== undefined ? data.slope : 0}" min="0" max="100"></div>
             <div class="inspector-row"><label>Tipo Corte</label>
-                <select id="inp-cutType">
-                    <option value="center" ${data.cutType === 'center' ? 'selected' : ''}>Centro (duas águas)</option>
-                    <option value="left" ${data.cutType === 'left' ? 'selected' : ''}>Esquerda</option>
-                    <option value="right" ${data.cutType === 'right' ? 'selected' : ''}>Direita</option>
-                </select>
+            <select id="inp-cutType">
+            <option value="GABLE" ${(data.cutType === 'center' || data.cutType === 'GABLE') ? 'selected' : ''}>Duas Águas (Central)</option>
+            <option value="LEFT_HIGH" ${(data.cutType === 'left' || data.cutType === 'LEFT_HIGH') ? 'selected' : ''}>Meia-Água (Sobe p/ Esq.)</option>
+            <option value="RIGHT_HIGH" ${(data.cutType === 'right' || data.cutType === 'RIGHT_HIGH') ? 'selected' : ''}>Meia-Água (Sobe p/ Dir.)</option>
+            </select>
             </div>
             ` : ''}
 
@@ -1244,6 +1441,40 @@ export class ModelBuilderPage {
                 <div class="inspector-row">
                     <input type="number" id="clone-qty" value="1" min="1" style="width:50px">
                     <button id="btn-prop-clone" class="btn-secondary" style="flex:1;">Clonar</button>
+                </div>
+             </div>
+
+             <!-- Assembly Instructions Section -->
+             <div style="margin-top:15px; border-top:1px solid #444; padding-top:10px;">
+                <div id="instructions-header" style="cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
+                    <label style="font-weight:bold;">📝 Instruções de Montagem</label>
+                    <span id="instructions-toggle" style="color:#888;">▼</span>
+                </div>
+                <div id="instructions-body" style="display:none; margin-top:10px;">
+                    <div class="inspector-row" style="flex-direction:column; align-items:stretch;">
+                        <label style="margin-bottom:5px;">Texto:</label>
+                        <textarea id="inp-instructions-text" rows="4" style="width:100%; background:#333; color:#fff; border:1px solid #555; border-radius:4px; padding:8px; resize:vertical;">${data.instructions?.text || ''}</textarea>
+                    </div>
+                    <div class="inspector-row" style="flex-direction:column; align-items:stretch; margin-top:10px;">
+                        <label style="margin-bottom:5px;">Imagens:</label>
+                        <div id="instructions-images" style="display:flex; flex-wrap:wrap; gap:5px; margin-bottom:8px;">
+                            ${(data.instructions?.images || []).map((img, i) => `
+                                <div style="position:relative; width:60px; height:60px;">
+                                    <img src="${img}" style="width:100%; height:100%; object-fit:cover; border-radius:4px; border:1px solid #555;">
+                                    <button class="remove-img-btn" data-idx="${i}" style="position:absolute; top:-5px; right:-5px; background:#ff4444; color:#fff; border:none; border-radius:50%; width:18px; height:18px; font-size:10px; cursor:pointer;">×</button>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <input type="file" id="inp-instructions-img" accept="image/*" style="font-size:0.8rem;">
+                    </div>
+                    <div class="inspector-row" style="flex-direction:column; align-items:stretch; margin-top:10px;">
+                        <label style="margin-bottom:5px;">Vídeo (YouTube/Vimeo URL):</label>
+                        <input type="text" id="inp-instructions-video" placeholder="https://youtube.com/watch?v=..." value="${data.instructions?.video || ''}" style="background:#333; color:#fff; border:1px solid #555; border-radius:4px; padding:6px;">
+                    </div>
+                    <div class="inspector-row" style="flex-direction:column; align-items:stretch; margin-top:10px;">
+                        <label style="margin-bottom:5px;">Notas Adicionais:</label>
+                        <input type="text" id="inp-instructions-notes" placeholder="Observações..." value="${data.instructions?.notes || ''}" style="background:#333; color:#fff; border:1px solid #555; border-radius:4px; padding:6px;">
+                    </div>
                 </div>
              </div>
         `;
@@ -1333,9 +1564,127 @@ export class ModelBuilderPage {
             }
         };
 
-        if (isBox || isGable) {
+        // Bind Resize Handlers for Windows
+        const inpWid = pan.querySelector('#inp-wid');
+        if (inpWid) inpWid.onchange = (e) => part.updateWidth(parseFloat(e.target.value));
+
+        const inpHei = pan.querySelector('#inp-hei');
+        if (inpHei) inpHei.onchange = (e) => part.updateHeight(parseFloat(e.target.value));
+
+        const btnCut = pan.querySelector('#btn-cut-walls');
+        console.log("Cut button found:", btnCut);
+        if (btnCut) {
+            btnCut.onclick = () => {
+                console.log("CUT BUTTON CLICKED! Calling handleCutOverlap...");
+                this.handleCutOverlap(part);
+            };
+        }
+
+        if (isBox || isGable || isTrama) {
             pan.querySelector('#inp-wid').onchange = (e) => { data.width = parseFloat(e.target.value); part.build(); };
             pan.querySelector('#inp-thk').onchange = (e) => { data.thickness = parseFloat(e.target.value); part.build(); };
+        }
+
+        if (isPlate) {
+            pan.querySelector('#inp-wid').onchange = (e) => { data.width = parseFloat(e.target.value); part.build(); };
+            pan.querySelector('#inp-hei').onchange = (e) => { data.height = parseFloat(e.target.value); part.build(); };
+        }
+
+        if (isGable) {
+            const inpSlope = pan.querySelector('#inp-slope');
+            if (inpSlope) inpSlope.onchange = (e) => { data.slope = parseFloat(e.target.value); part.build(); };
+
+            const inpCutType = pan.querySelector('#inp-cutType');
+            if (inpCutType) inpCutType.onchange = (e) => { data.cutType = e.target.value; part.build(); };
+        }
+
+        // Wall Cut Preview/Confirm Handlers
+        const btnPreviewCut = pan.querySelector('#btn-preview-cut');
+        const btnConfirmCut = pan.querySelector('#btn-confirm-cut');
+        const btnCancelCut = pan.querySelector('#btn-cancel-cut');
+
+        if (btnPreviewCut) {
+            // Function to update the cut preview box
+            const updateCutPreview = () => {
+                const cutStartY = parseFloat(pan.querySelector('#cut-start-y').value) || 0;
+                const cutEndY = parseFloat(pan.querySelector('#cut-end-y').value) || 0;
+                const cutStartZ = parseFloat(pan.querySelector('#cut-start-z').value) || 0;
+                const cutEndZ = parseFloat(pan.querySelector('#cut-end-z').value) || 0;
+
+                this.showCutPreview(part, cutStartY, cutEndY, cutStartZ, cutEndZ);
+            };
+
+            // Preview button shows the red box
+            btnPreviewCut.onclick = () => {
+                updateCutPreview();
+                // Show confirm and cancel buttons
+                btnConfirmCut.style.display = 'block';
+                btnCancelCut.style.display = 'block';
+                // Disable piece interaction and camera controls during cut mode
+                this.cutModeActive = true;
+                if (this.interactionManager) {
+                    this.interactionManager.enabled = false;
+                }
+                // Disable orbit controls so we can drag the cut preview
+                if (this.sceneManager && this.sceneManager.controls) {
+                    this.sceneManager.controls.enabled = false;
+                }
+            };
+
+            // Update preview when inputs change
+            ['#cut-start-y', '#cut-end-y', '#cut-start-z', '#cut-end-z'].forEach(sel => {
+                const input = pan.querySelector(sel);
+                if (input) {
+                    input.oninput = () => {
+                        if (btnConfirmCut.style.display === 'block') {
+                            updateCutPreview();
+                        }
+                    };
+                }
+            });
+
+            // Confirm button applies the cut
+            if (btnConfirmCut) {
+                btnConfirmCut.onclick = () => {
+                    const cutStartY = parseFloat(pan.querySelector('#cut-start-y').value);
+                    const cutEndY = parseFloat(pan.querySelector('#cut-end-y').value);
+                    const cutStartZ = parseFloat(pan.querySelector('#cut-start-z').value);
+                    const cutEndZ = parseFloat(pan.querySelector('#cut-end-z').value);
+
+                    this.clearCutPreview();
+                    this.applyWallCut(part, cutStartY, cutEndY, cutStartZ, cutEndZ);
+
+                    // Hide buttons and re-enable interaction
+                    btnConfirmCut.style.display = 'none';
+                    btnCancelCut.style.display = 'none';
+                    this.cutModeActive = false;
+                    if (this.interactionManager) {
+                        this.interactionManager.enabled = true;
+                    }
+                    // Re-enable orbit controls
+                    if (this.sceneManager && this.sceneManager.controls) {
+                        this.sceneManager.controls.enabled = true;
+                    }
+                };
+            }
+
+            // Cancel button removes preview
+            if (btnCancelCut) {
+                btnCancelCut.onclick = () => {
+                    this.clearCutPreview();
+                    btnConfirmCut.style.display = 'none';
+                    btnCancelCut.style.display = 'none';
+                    // Re-enable piece interaction
+                    this.cutModeActive = false;
+                    if (this.interactionManager) {
+                        this.interactionManager.enabled = true;
+                    }
+                    // Re-enable orbit controls
+                    if (this.sceneManager && this.sceneManager.controls) {
+                        this.sceneManager.controls.enabled = true;
+                    }
+                };
+            }
         }
 
         if (isGable) {
@@ -1358,6 +1707,70 @@ export class ModelBuilderPage {
             this.interactionManager.control.attach(part.mesh);
         };
         ['#inp-x', '#inp-y', '#inp-z', '#inp-rx', '#inp-ry', '#inp-rz', '#inp-step'].forEach(sel => pan.querySelector(sel).onchange = updatePos);
+
+        // --- INSTRUCTIONS BINDINGS ---
+        // Toggle accordion
+        const instructionsHeader = pan.querySelector('#instructions-header');
+        const instructionsBody = pan.querySelector('#instructions-body');
+        const instructionsToggle = pan.querySelector('#instructions-toggle');
+        if (instructionsHeader && instructionsBody) {
+            instructionsHeader.onclick = () => {
+                const isHidden = instructionsBody.style.display === 'none';
+                instructionsBody.style.display = isHidden ? 'block' : 'none';
+                instructionsToggle.textContent = isHidden ? '▲' : '▼';
+            };
+        }
+
+        // Initialize instructions object if not exists
+        if (!data.instructions) {
+            data.instructions = { text: '', images: [], video: '', notes: '' };
+        }
+
+        // Save text on change
+        const inpText = pan.querySelector('#inp-instructions-text');
+        if (inpText) {
+            inpText.onchange = () => { data.instructions.text = inpText.value; };
+        }
+
+        // Save video URL on change
+        const inpVideo = pan.querySelector('#inp-instructions-video');
+        if (inpVideo) {
+            inpVideo.onchange = () => { data.instructions.video = inpVideo.value; };
+        }
+
+        // Save notes on change
+        const inpNotes = pan.querySelector('#inp-instructions-notes');
+        if (inpNotes) {
+            inpNotes.onchange = () => { data.instructions.notes = inpNotes.value; };
+        }
+
+        // Image upload (base64)
+        const inpImg = pan.querySelector('#inp-instructions-img');
+        if (inpImg) {
+            inpImg.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    if (!data.instructions.images) data.instructions.images = [];
+                    data.instructions.images.push(ev.target.result); // base64 string
+                    this.renderInspector(object); // Re-render to show new image
+                };
+                reader.readAsDataURL(file);
+            };
+        }
+
+        // Remove image buttons
+        pan.querySelectorAll('.remove-img-btn').forEach(btn => {
+            btn.onclick = (e) => {
+                e.stopPropagation();
+                const idx = parseInt(btn.dataset.idx);
+                if (data.instructions.images && data.instructions.images[idx] !== undefined) {
+                    data.instructions.images.splice(idx, 1);
+                    this.renderInspector(object); // Re-render
+                }
+            };
+        });
     }
 
     refreshInspectorValues(data) {
@@ -1393,7 +1806,11 @@ export class ModelBuilderPage {
     }
 
     updatePropertiesPanel(object) {
-        this.renderInspector(object);
+        if (object && object.userData.isPackage) {
+            this.renderPackageInspector(object.userData.data);
+        } else {
+            this.renderInspector(object);
+        }
     }
 
     async saveModel() {
@@ -1443,9 +1860,624 @@ export class ModelBuilderPage {
         console.log("Model saved:", modelToSave);
     }
 
+    updateToolState(mode) {
+        const moveBtn = this.container.querySelector('#tool-move');
+        const rotBtn = this.container.querySelector('#tool-rotate');
+
+        if (moveBtn) {
+            moveBtn.style.background = mode === 'translate' ? '#444' : '';
+            moveBtn.style.borderColor = mode === 'translate' ? '#fff' : '#555';
+            moveBtn.style.color = mode === 'translate' ? '#fff' : '#eee';
+        }
+        if (rotBtn) {
+            rotBtn.style.background = mode === 'rotate' ? '#444' : '';
+            rotBtn.style.borderColor = mode === 'rotate' ? '#fff' : '#555';
+            rotBtn.style.color = mode === 'rotate' ? '#fff' : '#eee';
+        }
+    }
+
     destroy() {
         this.active = false;
         window.removeEventListener('resize', this.resizeHandler);
         if (this.interactionManager) this.interactionManager.control.detach();
+    }
+
+    highlightOverlappingParts(windowPart) {
+        // First clear any previous highlights
+        this.clearOverlapHighlights();
+
+        const windowMesh = windowPart.mesh;
+        windowMesh.updateMatrixWorld(true);
+        const winBox = new THREE.Box3().setFromObject(windowMesh);
+
+        console.log("Checking overlaps for window:", windowPart.data.id, winBox.min, winBox.max);
+
+        // Store preview meshes for cleanup
+        if (!this.overlapPreviewMeshes) this.overlapPreviewMeshes = [];
+
+        // Create red material for intersection visualization
+        const redMaterial = new THREE.MeshBasicMaterial({
+            color: 0xff0000,
+            transparent: true,
+            opacity: 0.7,
+            depthTest: true
+        });
+
+        this.partsMap.forEach(part => {
+            if (part.data.id === windowPart.data.id) return;
+
+            const profile = ProfileCatalog[part.data.profileId];
+            if (!profile) return;
+
+            const isStud = (profile.type === 'stud');
+            const isBox = (profile.type === 'box');
+
+            if (!isStud && !isBox) return;
+
+            const targetMesh = part.mesh;
+            targetMesh.updateMatrixWorld(true);
+            const targetBox = new THREE.Box3().setFromObject(targetMesh);
+
+            if (winBox.intersectsBox(targetBox)) {
+                console.log("OVERLAP FOUND:", part.data.id);
+
+                // Calculate the INTERSECTION box (only the overlapping volume)
+                const intersectionBox = new THREE.Box3();
+                intersectionBox.min.x = Math.max(winBox.min.x, targetBox.min.x);
+                intersectionBox.min.y = Math.max(winBox.min.y, targetBox.min.y);
+                intersectionBox.min.z = Math.max(winBox.min.z, targetBox.min.z);
+                intersectionBox.max.x = Math.min(winBox.max.x, targetBox.max.x);
+                intersectionBox.max.y = Math.min(winBox.max.y, targetBox.max.y);
+                intersectionBox.max.z = Math.min(winBox.max.z, targetBox.max.z);
+
+                // Create a box mesh for the intersection volume
+                const size = new THREE.Vector3();
+                intersectionBox.getSize(size);
+
+                const center = new THREE.Vector3();
+                intersectionBox.getCenter(center);
+
+                console.log("Intersection size:", size, "center:", center);
+
+                if (size.x > 0.1 && size.y > 0.1 && size.z > 0.1) {
+                    const previewGeo = new THREE.BoxGeometry(size.x, size.y, size.z);
+                    const previewMesh = new THREE.Mesh(previewGeo, redMaterial);
+                    previewMesh.position.copy(center);
+
+                    // Add wireframe for clarity
+                    const edges = new THREE.EdgesGeometry(previewGeo);
+                    const lineMat = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 2 });
+                    const wireframe = new THREE.LineSegments(edges, lineMat);
+                    previewMesh.add(wireframe);
+
+                    this.sceneManager.scene.add(previewMesh);
+                    this.overlapPreviewMeshes.push(previewMesh);
+                }
+            }
+        });
+    }
+
+    clearOverlapHighlights() {
+        // Remove preview meshes
+        if (this.overlapPreviewMeshes) {
+            this.overlapPreviewMeshes.forEach(mesh => {
+                this.sceneManager.scene.remove(mesh);
+                if (mesh.geometry) mesh.geometry.dispose();
+            });
+            this.overlapPreviewMeshes = [];
+        }
+    }
+
+    /**
+     * Show a red preview box indicating where the cut will be made on a wall
+     * Adds preview as CHILD of wall mesh so it moves with the wall
+     */
+    showCutPreview(wallPart, cutStartY, cutEndY, cutStartZ, cutEndZ) {
+        // Clear any existing preview
+        this.clearCutPreview();
+
+        const wallData = wallPart.data;
+        const wallMesh = wallPart.mesh;
+        const SCALE = 0.3;
+
+        // Wall dimensions in scene units
+        const wallThickness = (wallData.thickness || 10) * SCALE;
+        const wallWidth = (wallData.width || 61) * SCALE;
+        const wallHeight = (wallData.length || 280) * SCALE;
+
+        // Cut dimensions in scene units
+        const cutWidth = (cutEndY - cutStartY) * SCALE;
+        const cutHeight = (cutEndZ - cutStartZ) * SCALE;
+
+        // Calculate LOCAL position within wall (wall center is at 0,0,0 locally)
+        const localY = (cutStartY * SCALE) + (cutWidth / 2) - (wallWidth / 2);
+        const localZ = (cutStartZ * SCALE) + (cutHeight / 2) - (wallHeight / 2);
+
+        console.log(`Cut preview: dims=${cutWidth.toFixed(2)}x${cutHeight.toFixed(2)}, pos=(${localY.toFixed(2)}, ${localZ.toFixed(2)})`);
+
+        // Create red semi-transparent box for the cut area
+        const previewGeo = new THREE.BoxGeometry(wallThickness * 1.05, cutWidth, cutHeight);
+        const previewMat = new THREE.MeshBasicMaterial({
+            color: 0xff0000,
+            transparent: true,
+            opacity: 0.8,
+            depthTest: false,
+            side: THREE.DoubleSide
+        });
+
+        const previewMesh = new THREE.Mesh(previewGeo, previewMat);
+        previewMesh.position.set(0, localY, localZ);
+
+        // Add wireframe edges
+        const edges = new THREE.EdgesGeometry(previewGeo);
+        const lineMat = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 3 });
+        const wireframe = new THREE.LineSegments(edges, lineMat);
+        previewMesh.add(wireframe);
+
+        // Add as child of wall mesh
+        wallMesh.add(previewMesh);
+
+        // Store data for dragging
+        this.cutPreviewMesh = previewMesh;
+        this.cutPreviewParent = wallMesh;
+        this.cutPreviewData = {
+            wallPart: wallPart,
+            wallWidth: wallWidth,
+            wallHeight: wallHeight,
+            cutWidth: cutWidth,
+            cutHeight: cutHeight,
+            scale: SCALE
+        };
+
+        // Mark as draggable for interaction
+        previewMesh.userData.isDraggable = true;
+        previewMesh.userData.type = 'cutPreview';
+
+        // Enable dragging mode
+        this.setupCutDragging();
+    }
+
+    /**
+     * Setup mouse handlers for dragging the cut preview
+     * During cut mode, any drag on canvas moves the preview
+     */
+    setupCutDragging() {
+        if (this.cutDragHandlersSetup) return;
+
+        const canvas = this.sceneManager.renderer.domElement;
+        let isDragging = false;
+
+        const onMouseDown = (e) => {
+            if (!this.cutModeActive || !this.cutPreviewMesh) return;
+            isDragging = true;
+            canvas.style.cursor = 'grabbing';
+            e.preventDefault();
+        };
+
+        const onMouseMove = (e) => {
+            if (!isDragging || !this.cutPreviewMesh || !this.cutPreviewData) return;
+
+            const data = this.cutPreviewData;
+            // movementX/Y are in pixels, scale down for scene movement
+            const movementY = e.movementX * 0.02;  // horizontal mouse -> Y axis
+            const movementZ = -e.movementY * 0.02; // vertical mouse -> Z axis (inverted)
+
+            // Update position - no clamping, allow cuts outside wall bounds
+            let newY = this.cutPreviewMesh.position.y + movementY;
+            let newZ = this.cutPreviewMesh.position.z + movementZ;
+
+            this.cutPreviewMesh.position.y = newY;
+            this.cutPreviewMesh.position.z = newZ;
+
+            // Update input fields
+            this.updateCutInputsFromPreview();
+        };
+
+        const onMouseUp = () => {
+            if (isDragging) {
+                isDragging = false;
+                canvas.style.cursor = 'default';
+            }
+        };
+
+        canvas.addEventListener('mousedown', onMouseDown);
+        canvas.addEventListener('mousemove', onMouseMove);
+        canvas.addEventListener('mouseup', onMouseUp);
+        canvas.addEventListener('mouseleave', onMouseUp);
+
+        this.cutDragHandlersSetup = true;
+        this.cutDragCleanup = () => {
+            canvas.removeEventListener('mousedown', onMouseDown);
+            canvas.removeEventListener('mousemove', onMouseMove);
+            canvas.removeEventListener('mouseup', onMouseUp);
+            canvas.removeEventListener('mouseleave', onMouseUp);
+            this.cutDragHandlersSetup = false;
+        };
+    }
+
+    /**
+     * Update cut input fields from preview position
+     */
+    updateCutInputsFromPreview() {
+        if (!this.cutPreviewMesh || !this.cutPreviewData) return;
+
+        const data = this.cutPreviewData;
+        const pos = this.cutPreviewMesh.position;
+
+        // Convert from local position back to cm values
+        // pos.y is offset from wall center, add half wall width to get from corner
+        // pos.z is offset from wall center, add half wall height to get from corner
+        const cutCenterY = pos.y + data.wallWidth / 2;
+        const cutCenterZ = pos.z + data.wallHeight / 2;
+
+        const startY = (cutCenterY - data.cutWidth / 2) / data.scale;
+        const endY = (cutCenterY + data.cutWidth / 2) / data.scale;
+        const startZ = (cutCenterZ - data.cutHeight / 2) / data.scale;
+        const endZ = (cutCenterZ + data.cutHeight / 2) / data.scale;
+
+        console.log(`updateCutInputsFromPreview: pos.y=${pos.y.toFixed(2)}, pos.z=${pos.z.toFixed(2)}`);
+        console.log(`  -> startY=${startY.toFixed(1)}, endY=${endY.toFixed(1)}, startZ=${startZ.toFixed(1)}, endZ=${endZ.toFixed(1)}`);
+
+        // Update input fields - use document.getElementById since inputs have unique IDs
+        const inpStartY = document.getElementById('cut-start-y');
+        const inpEndY = document.getElementById('cut-end-y');
+        const inpStartZ = document.getElementById('cut-start-z');
+        const inpEndZ = document.getElementById('cut-end-z');
+
+        console.log(`Found inputs: startY=${!!inpStartY}, endY=${!!inpEndY}, startZ=${!!inpStartZ}, endZ=${!!inpEndZ}`);
+
+        if (inpStartY) inpStartY.value = startY.toFixed(1);
+        if (inpEndY) inpEndY.value = endY.toFixed(1);
+        if (inpStartZ) inpStartZ.value = startZ.toFixed(1);
+        if (inpEndZ) inpEndZ.value = endZ.toFixed(1);
+    }
+
+    /**
+     * Clear the cut preview box
+     */
+    clearCutPreview() {
+        if (this.cutPreviewMesh && this.cutPreviewParent) {
+            this.cutPreviewParent.remove(this.cutPreviewMesh);
+            if (this.cutPreviewMesh.geometry) this.cutPreviewMesh.geometry.dispose();
+            if (this.cutPreviewMesh.material) this.cutPreviewMesh.material.dispose();
+            this.cutPreviewMesh = null;
+            this.cutPreviewParent = null;
+        } else if (this.cutPreviewMesh) {
+            this.sceneManager.scene.remove(this.cutPreviewMesh);
+            if (this.cutPreviewMesh.geometry) this.cutPreviewMesh.geometry.dispose();
+            if (this.cutPreviewMesh.material) this.cutPreviewMesh.material.dispose();
+            this.cutPreviewMesh = null;
+        }
+    }
+
+    /**
+     * Apply a cut (hole) to a wall - keeps wall as single piece with opening
+     * Adds cut to wall.data.cuts array and rebuilds geometry
+     */
+    applyWallCut(wallPart, cutStartY, cutEndY, cutStartZ, cutEndZ) {
+        console.log("=== APPLYING WALL CUT (SINGLE PIECE) ===");
+
+        // Save state for undo
+        this.saveUndoState();
+
+        const wallData = wallPart.data;
+        const wallWidth = wallData.width || 100; // Y axis (horizontal)
+        const wallHeight = wallData.length || 280; // Z axis (vertical)
+
+        console.log(`Wall: width=${wallWidth}cm, height=${wallHeight}cm`);
+        console.log(`Cut: Y=[${cutStartY}, ${cutEndY}], Z=[${cutStartZ}, ${cutEndZ}]`);
+
+        // Clamp cut values to wall bounds (for edge cuts that go outside)
+        const clampedStartY = Math.max(0, cutStartY);
+        const clampedEndY = Math.min(wallWidth, cutEndY);
+        const clampedStartZ = Math.max(0, cutStartZ);
+        const clampedEndZ = Math.min(wallHeight, cutEndZ);
+
+        console.log(`Clamped cut: Y=[${clampedStartY}, ${clampedEndY}], Z=[${clampedStartZ}, ${clampedEndZ}]`);
+
+        // Validate that there's actually something to cut after clamping
+        if (clampedStartY >= clampedEndY || clampedStartZ >= clampedEndZ) {
+            alert("O corte está fora da parede ou tem dimensões inválidas!");
+            return;
+        }
+
+        // Initialize cuts array if doesn't exist
+        if (!wallData.cuts) {
+            wallData.cuts = [];
+        }
+
+        // Add the new cut to the array (use clamped values)
+        const newCut = {
+            startY: clampedStartY,
+            endY: clampedEndY,
+            startZ: clampedStartZ,
+            endZ: clampedEndZ
+        };
+        wallData.cuts.push(newCut);
+
+        console.log(`Wall now has ${wallData.cuts.length} cut(s)`);
+
+        // Rebuild the wall geometry
+        wallPart.build();
+
+        this.renderTree();
+        alert(`Corte adicionado!\nA parede agora tem ${wallData.cuts.length} abertura(s).`);
+        console.log("=== WALL CUT COMPLETE ===");
+    }
+
+    handleCutOverlap(windowPart) {
+        try {
+            // Clear preview highlights first
+            this.clearOverlapHighlights();
+
+            // Skip confirm for now to debug - just execute
+            console.log("=== STARTING WALL CUT (NO CONFIRM) ===");
+            console.log("Window Part ID:", windowPart.data.id);
+
+            // Get Window Bounding Box in World Space
+            const windowMesh = windowPart.mesh;
+            windowMesh.updateMatrixWorld(true);
+            const winBox = new THREE.Box3().setFromObject(windowMesh);
+
+            console.log("Window BBox min:", winBox.min.x.toFixed(2), winBox.min.y.toFixed(2), winBox.min.z.toFixed(2));
+            console.log("Window BBox max:", winBox.max.x.toFixed(2), winBox.max.y.toFixed(2), winBox.max.z.toFixed(2));
+
+            const partsToRemove = [];
+            const partsToAdd = [];
+
+            // Find all parts that intersect with the window
+            this.partsMap.forEach((part, partId) => {
+                if (part.data.id === windowPart.data.id) return; // Skip self
+
+                const profile = ProfileCatalog[part.data.profileId];
+                if (!profile) return;
+
+                // Only process walls and studs
+                if (profile.type !== 'stud' && profile.type !== 'box') return;
+
+                const targetMesh = part.mesh;
+                targetMesh.updateMatrixWorld(true);
+                const targetBox = new THREE.Box3().setFromObject(targetMesh);
+
+                console.log(`Checking ${part.data.id} (${profile.type})`);
+
+                if (winBox.intersectsBox(targetBox)) {
+                    console.log(`  ==> COLLISION!`);
+
+                    // Get wall dimensions from DATA (local, in cm)
+                    const wallData = part.data;
+                    const wallHeight = wallData.length || 280; // Z in scene = height
+                    const wallWidth = wallData.width || 61; // Y in scene = width
+                    const wallThickness = wallData.thickness || 10; // X in scene
+
+                    // Get wall position from DATA
+                    const wallX = wallData.x || 0;
+                    const wallY = wallData.y || 0;
+                    const wallZ = wallData.z || 0;
+
+                    console.log(`  Wall data: height=${wallHeight}cm, width=${wallWidth}cm, pos=(${wallX}, ${wallY}, ${wallZ})`);
+
+                    // Calculate window bounds relative to wall's local coordinate system
+                    // Window is in world space, wall is positioned at wallX, wallY, wallZ
+                    const SCALE = 0.3;
+
+                    // Get window dimensions relative to the wall position
+                    // Convert world bbox to local wall coordinates
+                    const winMinLocalY = (winBox.min.y - (wallY * SCALE)) / SCALE; // Y in scene = width axis
+                    const winMaxLocalY = (winBox.max.y - (wallY * SCALE)) / SCALE;
+                    const winMinLocalZ = (winBox.min.z - (wallZ * SCALE)) / SCALE; // Z in scene = height axis
+                    const winMaxLocalZ = (winBox.max.z - (wallZ * SCALE)) / SCALE;
+
+                    console.log(`  Window local bounds: Y=[${winMinLocalY.toFixed(1)}, ${winMaxLocalY.toFixed(1)}], Z=[${winMinLocalZ.toFixed(1)}, ${winMaxLocalZ.toFixed(1)}]`);
+                    console.log(`  Wall local bounds:   Y=[0, ${wallWidth}], Z=[0, ${wallHeight}]`);
+
+                    // Clamp window bounds to wall bounds
+                    const cutMinY = Math.max(0, winMinLocalY);
+                    const cutMaxY = Math.min(wallWidth, winMaxLocalY);
+                    const cutMinZ = Math.max(0, winMinLocalZ);
+                    const cutMaxZ = Math.min(wallHeight, winMaxLocalZ);
+
+                    const cutWidth = cutMaxY - cutMinY;
+                    const cutHeight = cutMaxZ - cutMinZ;
+
+                    console.log(`  Cut region: Y=[${cutMinY.toFixed(1)}, ${cutMaxY.toFixed(1)}] (${cutWidth.toFixed(1)}cm), Z=[${cutMinZ.toFixed(1)}, ${cutMaxZ.toFixed(1)}] (${cutHeight.toFixed(1)}cm)`);
+
+                    // If cut is too small, skip
+                    if (cutWidth < 1 || cutHeight < 1) {
+                        console.log(`  Cut too small, skipping`);
+                        return;
+                    }
+
+                    // Create remaining pieces (only if they have substantial size)
+                    const MIN_SIZE = 5; // Minimum 5cm for a piece
+
+                    // BOTTOM piece (from Z=0 to cutMinZ)
+                    if (cutMinZ > MIN_SIZE) {
+                        const pBot = { ...wallData };
+                        pBot.id = wallData.profileId + '_BOT_' + Math.random().toString(36).slice(2, 6);
+                        pBot.length = cutMinZ; // Height (Z)
+                        // Keep same Y/width and X/Z position
+                        partsToAdd.push(pBot);
+                        console.log(`  Created BOTTOM: height=${cutMinZ.toFixed(1)}cm`);
+                    }
+
+                    // TOP piece (from cutMaxZ to wallHeight)
+                    const topHeight = wallHeight - cutMaxZ;
+                    if (topHeight > MIN_SIZE) {
+                        const pTop = { ...wallData };
+                        pTop.id = wallData.profileId + '_TOP_' + Math.random().toString(36).slice(2, 6);
+                        pTop.length = topHeight; // Height (Z)
+                        pTop.z = wallZ + cutMaxZ * SCALE; // Shift up by the cut max position
+                        partsToAdd.push(pTop);
+                        console.log(`  Created TOP: height=${topHeight.toFixed(1)}cm at z=${pTop.z.toFixed(1)}`);
+                    }
+
+                    // LEFT piece (from Y=0 to cutMinY, full height of cut region)
+                    if (cutMinY > MIN_SIZE) {
+                        const pLeft = { ...wallData };
+                        pLeft.id = wallData.profileId + '_LEFT_' + Math.random().toString(36).slice(2, 6);
+                        pLeft.width = cutMinY; // Width (Y)
+                        pLeft.length = cutHeight; // Height = just the middle section
+                        pLeft.z = wallZ + cutMinZ * SCALE; // Start at cut bottom
+                        partsToAdd.push(pLeft);
+                        console.log(`  Created LEFT: width=${cutMinY.toFixed(1)}cm, height=${cutHeight.toFixed(1)}cm`);
+                    }
+
+                    // RIGHT piece (from cutMaxY to wallWidth, full height of cut region)
+                    const rightWidth = wallWidth - cutMaxY;
+                    if (rightWidth > MIN_SIZE) {
+                        const pRight = { ...wallData };
+                        pRight.id = wallData.profileId + '_RIGHT_' + Math.random().toString(36).slice(2, 6);
+                        pRight.width = rightWidth; // Width (Y)
+                        pRight.length = cutHeight; // Height = just the middle section
+                        pRight.y = wallY + cutMaxY * SCALE; // Shift right
+                        pRight.z = wallZ + cutMinZ * SCALE; // Start at cut bottom
+                        partsToAdd.push(pRight);
+                        console.log(`  Created RIGHT: width=${rightWidth.toFixed(1)}cm at y=${pRight.y.toFixed(1)}`);
+                    }
+
+                    partsToRemove.push(part);
+                } else {
+                    console.log(`  No collision.`);
+                }
+            });
+
+            // Execute Changes
+            console.log(`\n=== EXECUTING CUT ===`);
+            console.log(`Parts to remove: ${partsToRemove.length}`);
+            console.log(`Parts to add: ${partsToAdd.length}`);
+
+            if (partsToRemove.length === 0) {
+                alert("Nenhuma colisão detectada. Certifique-se de que a janela está sobrepondo as paredes.");
+                return;
+            }
+
+            // Remove old parts
+            partsToRemove.forEach(p => {
+                console.log(`Removing: ${p.data.id}`);
+                this.deletePart(p);
+            });
+
+            // Add new parts
+            partsToAdd.forEach(pData => {
+                console.log(`Adding: ${pData.id} (width=${pData.width}, length=${pData.length})`);
+                this.modelData.looseParts.push(pData);
+                this.instantiateLoosePart(pData);
+            });
+
+            this.renderTree();
+            alert(`Corte realizado!\n${partsToRemove.length} peça(s) removida(s)\n${partsToAdd.length} nova(s) peça(s) criada(s)`);
+            console.log("=== CUT COMPLETE ===");
+        } catch (error) {
+            console.error("ERROR in handleCutOverlap:", error);
+            alert("Erro ao cortar: " + error.message);
+        }
+    }
+
+    deletePart(part) {
+        console.log(`deletePart: Removing ${part.data.id}`);
+        console.log(`  Mesh parent before: ${part.mesh.parent ? part.mesh.parent.type : 'null'}`);
+
+        // Use scene.remove if removeFromParent doesn't work
+        if (part.mesh.parent) {
+            part.mesh.parent.remove(part.mesh);
+        }
+        // Also try direct scene removal
+        this.sceneManager.scene.remove(part.mesh);
+
+        console.log(`  Mesh parent after: ${part.mesh.parent ? part.mesh.parent.type : 'null'}`);
+
+        // Remove from Map
+        const deleted = this.partsMap.delete(part.data.id);
+        console.log(`  Removed from partsMap: ${deleted}`);
+
+        // Remove from Data Arrays
+        if (part.data.packageId) {
+            const pkg = this.findPackage(part.data.packageId);
+            if (pkg) {
+                const beforeLen = pkg.pieces.length;
+                pkg.pieces = pkg.pieces.filter(p => p.id !== part.data.id);
+                console.log(`  Removed from package ${part.data.packageId}: ${beforeLen} -> ${pkg.pieces.length}`);
+            }
+        } else {
+            const beforeLen = this.modelData.looseParts.length;
+            this.modelData.looseParts = this.modelData.looseParts.filter(p => p.id !== part.data.id);
+            console.log(`  Removed from looseParts: ${beforeLen} -> ${this.modelData.looseParts.length}`);
+        }
+
+        // Dispose geometry and material to free memory
+        if (part.mesh.geometry) part.mesh.geometry.dispose();
+        if (part.mesh.material) {
+            if (Array.isArray(part.mesh.material)) {
+                part.mesh.material.forEach(m => m.dispose());
+            } else {
+                part.mesh.material.dispose();
+            }
+        }
+
+        console.log(`  Part ${part.data.id} deleted successfully`);
+    }
+
+    /**
+     * Save current state to undo stack
+     * Call this before making any destructive changes
+     */
+    saveUndoState() {
+        if (!this.modelData) return;
+
+        // Deep clone the current model data
+        const snapshot = JSON.parse(JSON.stringify(this.modelData));
+
+        this.undoStack.push(snapshot);
+
+        // Limit stack size
+        if (this.undoStack.length > this.maxUndoSteps) {
+            this.undoStack.shift();
+        }
+
+        console.log(`Undo state saved. Stack size: ${this.undoStack.length}`);
+    }
+
+    /**
+     * Undo the last change - restore previous state
+     */
+    undo() {
+        if (!this.undoStack || this.undoStack.length === 0) {
+            console.log("Nothing to undo");
+            return;
+        }
+
+        // Pop the last saved state
+        const previousState = this.undoStack.pop();
+        console.log(`Undoing... Stack remaining: ${this.undoStack.length}`);
+
+        // Restore the model data
+        this.modelData = previousState;
+
+        // Clear current scene objects
+        this.partsMap.forEach(part => {
+            if (part.mesh) {
+                if (part.mesh.parent) part.mesh.parent.remove(part.mesh);
+                this.sceneManager.scene.remove(part.mesh);
+            }
+        });
+        this.partsMap.clear();
+
+        // Clear package groups
+        this.packageGroups.forEach(group => {
+            this.sceneManager.scene.remove(group);
+        });
+        this.packageGroups.clear();
+
+        // Rebuild scene from restored data
+        this.buildSceneFromData();
+        this.renderTree();
+
+        // Deselect all
+        if (this.interactionManager) {
+            this.interactionManager.deselectAll();
+        }
+
+        console.log("Undo complete");
     }
 }

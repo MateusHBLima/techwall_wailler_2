@@ -23,8 +23,9 @@ export class SceneManager {
     const gridHelper = new THREE.GridHelper(500, 50);
     this.scene.add(gridHelper);
 
-    // Axes Helper
-    const axesHelper = new THREE.AxesHelper(100);
+    // Axes Helper - positioned at corner for reference
+    const axesHelper = new THREE.AxesHelper(50);
+    axesHelper.position.set(-200, 0, -200); // Move to corner
     this.scene.add(axesHelper);
 
     console.log('SceneManager initialized. Canvas size:', this.screenDimensions);

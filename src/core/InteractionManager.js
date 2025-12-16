@@ -16,7 +16,13 @@ export class InteractionManager {
         this.control = new TransformControls(this.camera, this.canvas);
         this.control.setSpace('local');
         this.control.addEventListener('dragging-changed', (event) => {
+            console.log(`Gizmo Drag: ${event.value ? 'Start' : 'End'}`);
             this.sceneManager.controls.enabled = !event.value;
+
+            // Sync Data Model on Drag End
+            if (!event.value && this.selectedObjects.length > 0) {
+                this.syncTransformToData();
+            }
         });
 
         // Single Gizmo for the "Primary" selection
@@ -24,27 +30,38 @@ export class InteractionManager {
 
         // Snapping defaults
         this.control.setTranslationSnap(1); // 1cm default
-        this.control.setRotationSnap(THREE.MathUtils.degToRad(15)); // 15 degrees
+        this.control.setRotationSnap(null); // Free rotation by default to avoid "stuck" feeling
+        this.control.setSize(1.2); // Make gizmo easier to grab
 
         // MULTI-SELECTION
         this.selectedObjects = [];
         this.selectionMode = false; // When true, clicking adds to selection
+
+        // Enabled flag - when false, all interactions are disabled
+        this.enabled = true;
 
         this.initEvents();
     }
 
     initEvents() {
         this.control.addEventListener('change', () => {
-            // If Gizmo moves the primary object, we might want to move others too?
-            // For now, Gizmo only affects the primary selected object.
-            if (this.selectedObjects.length > 0 && this.uiManager) {
-                this.uiManager.updatePropertiesPanel(this.selectedObjects[this.selectedObjects.length - 1]);
+            // Update data model in real-time for responsive UI
+            if (this.selectedObjects.length > 0) {
+                const obj = this.selectedObjects[this.selectedObjects.length - 1];
+
+                // Sync position/rotation to data immediately
+                this.syncObjectData(obj);
+
+                if (this.uiManager) {
+                    this.uiManager.updatePropertiesPanel(obj);
+                }
             }
         });
 
         this.canvas.addEventListener('pointerdown', (event) => this.onPointerDown(event));
         this.canvas.addEventListener('pointermove', (event) => this.onPointerMove(event));
         this.canvas.addEventListener('pointerup', (event) => this.onPointerUp(event));
+        this.canvas.addEventListener('dblclick', (event) => this.onDoubleClick(event));
 
         window.addEventListener('keydown', (event) => {
             switch (event.key.toLowerCase()) {
@@ -68,6 +85,9 @@ export class InteractionManager {
     }
 
     onPointerDown(event) {
+        // Skip if interaction is disabled
+        if (!this.enabled) return;
+
         if (this.control.axis) return; // Gizmo interaction
 
         this.updateMouse(event);
@@ -262,6 +282,43 @@ export class InteractionManager {
         }
     }
 
+    onDoubleClick(event) {
+        if (!this.enabled) return;
+
+        this.updateMouse(event);
+        this.raycaster.setFromCamera(this.mouse, this.camera);
+        const intersects = this.raycaster.intersectObjects(this.scene.children, true);
+
+        if (intersects.length > 0) {
+            const hit = intersects[0];
+            let curr = hit.object;
+            let hitPart = null;
+
+            // Simple traversal to find the immediate part, ignoring Package containment
+            while (curr) {
+                if (curr === this.scene) break;
+
+                // If we hit a package root, stop (don't select it, we want what's inside)
+                if (curr.userData && curr.userData.isPackage) break;
+
+                // Found a part?
+                if (curr.userData && (curr.userData.id || curr.userData.isPart)) {
+                    hitPart = curr;
+                    // Keep going up in case the part is a Group of meshes, we want the Group root
+                    // But if parent provides ID and is NOT package, use parent?
+                    // In SteelPart, this.mesh is a Group with userData.id. Children (meshes) don't usually have ID.
+                    // So we want the highest non-package node with ID.
+                }
+                curr = curr.parent;
+            }
+
+            if (hitPart) {
+                console.log("Double Click Drill Down: Selecting Part", hitPart.userData.id);
+                this.select(hitPart, false); // Select just this part
+            }
+        }
+    }
+
     isSelectable(object) {
         return object.userData && (object.userData.selectable || object.userData.partId || object.userData.packageId);
     }
@@ -362,8 +419,13 @@ export class InteractionManager {
     }
 
     setMode(mode) {
-        // console.log(`Setting mode to: ${mode}`);
+        console.log(`Setting Transform Mode to: ${mode}`);
         this.control.setMode(mode);
+
+        // Update UI Buttons
+        if (this.uiManager && this.uiManager.updateToolState) {
+            this.uiManager.updateToolState(mode);
+        }
 
         // Force refresh of the gizmo visual state
         if (this.selectedObjects.length > 0) {
@@ -381,5 +443,56 @@ export class InteractionManager {
 
     setSnapping(translation, rotation) {
         if (translation !== undefined) this.control.setTranslationSnap(translation);
+        if (rotation !== undefined) this.control.setRotationSnap(rotation);
+    }
+
+    rotateSelectionY(degrees) {
+        console.log(`Rotating selection by ${degrees} degrees`);
+        const rad = THREE.MathUtils.degToRad(degrees);
+
+        this.selectedObjects.forEach(obj => {
+            // Rotate around Y axis
+            obj.rotateY(rad);
+        });
+
+        // Sync and Update UI
+        this.syncTransformToData();
+        if (this.selectedObjects.length > 0 && this.uiManager) {
+            this.uiManager.updatePropertiesPanel(this.selectedObjects[this.selectedObjects.length - 1]);
+        }
+    }
+
+    syncObjectData(obj) {
+        if (!obj || !obj.userData) return;
+
+        // 1. Handle Package (Group)
+        if (obj.userData.isPackage && obj.userData.data) {
+            const pkg = obj.userData.data;
+            pkg.x = obj.position.x;
+            pkg.y = obj.position.y;
+            pkg.z = obj.position.z;
+
+            pkg.rx = obj.rotation.x;
+            pkg.ry = obj.rotation.y;
+            pkg.rz = obj.rotation.z;
+        }
+        // 2. Handle Part (Loose or in Group)
+        else if (obj.userData.id && this.uiManager && this.uiManager.partsMap) {
+            const part = this.uiManager.partsMap.get(obj.userData.id);
+            if (part && part.data) {
+                part.data.x = obj.position.x;
+                part.data.y = obj.position.y;
+                part.data.z = obj.position.z;
+
+                part.data.rx = obj.rotation.x;
+                part.data.ry = obj.rotation.y;
+                part.data.rz = obj.rotation.z;
+            }
+        }
+    }
+
+    syncTransformToData() {
+        console.log("Syncing Transform to Data Model...");
+        this.selectedObjects.forEach(obj => this.syncObjectData(obj));
     }
 }

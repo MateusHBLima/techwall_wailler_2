@@ -372,5 +372,10 @@ export class UIManager {
             case 'z': obj.position.z = value; break;
             case 'rotY': obj.rotation.y = THREE.MathUtils.degToRad(value); break;
         }
+
+        // Sync changes back to data model
+        if (this.interactionManager.syncTransformToData) {
+            this.interactionManager.syncTransformToData();
+        }
     }
 }
